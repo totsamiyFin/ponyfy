@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 // ── MLP Colour Palette ──────────────────────────────────────────────────────
 class MlpColors {
@@ -48,7 +47,7 @@ class MlpTheme {
         onSurface: MlpColors.textPrimary,
         error: MlpColors.disconnected,
       ),
-      textTheme: GoogleFonts.nunitoTextTheme(base.textTheme).apply(
+      textTheme: base.textTheme.apply(
         bodyColor: MlpColors.textPrimary,
         displayColor: MlpColors.textPrimary,
       ),
@@ -70,7 +69,7 @@ class MlpTheme {
         backgroundColor: MlpColors.surface,
         indicatorColor: MlpColors.pinkGlow,
         labelTextStyle: WidgetStateProperty.all(
-          GoogleFonts.nunito(color: MlpColors.textSecondary, fontSize: 12),
+          const TextStyle(color: MlpColors.textSecondary, fontSize: 12),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
