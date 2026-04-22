@@ -6,7 +6,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  # ── Android APK ────────────────────────────────────────────────────────────
   build-android:
     name: Build Android APK
     runs-on: ubuntu-latest
@@ -24,28 +23,17 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Create base Flutter project and overlay our sources
-        run: |
-          flutter create --org com.ponyfy --project-name ponyfy_base /tmp/ponyfy_base
-          cp -r ponyfy/lib /tmp/ponyfy_base/
-          cp -r ponyfy/assets /tmp/ponyfy_base/
-          cp ponyfy/pubspec.yaml /tmp/ponyfy_base/pubspec.yaml
-
-      - name: Get dependencies
+      - name: Flutter pub get
         run: flutter pub get
-        working-directory: /tmp/ponyfy_base
 
       - name: Build APK
         run: flutter build apk --release
-        working-directory: /tmp/ponyfy_base
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: ponyfy-android
-          path: /tmp/ponyfy_base/build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
 
-  # ── Windows EXE ────────────────────────────────────────────────────────────
   build-windows:
     name: Build Windows EXE
     runs-on: windows-latest
@@ -58,26 +46,19 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Create base Flutter project and overlay our sources
-        run: |
-          flutter create --org com.ponyfy --project-name ponyfy_base C:\ponyfy_base
-          Copy-Item -Recurse -Force ponyfy\lib C:\ponyfy_base\lib
-          Copy-Item -Recurse -Force ponyfy\assets C:\ponyfy_base\assets
-          Copy-Item -Force ponyfy\pubspec.yaml C:\ponyfy_base\pubspec.yaml
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
 
-      - name: Get dependencies
+      - name: Flutter pub get
         run: flutter pub get
-        working-directory: C:\ponyfy_base
 
       - name: Build Windows
         run: flutter build windows --release
-        working-directory: C:\ponyfy_base
 
       - name: Zip output
-        run: Compress-Archive -Path C:\ponyfy_base\build\windows\x64\runner\Release\* -DestinationPath ponyfy-windows.zip
+        run: Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath ponyfy-windows.zip
 
-      - name: Upload Windows build
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: ponyfy-windows
           path: ponyfy-windows.zip
