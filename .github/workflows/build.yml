@@ -26,6 +26,9 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
 
+      - name: Add Android platform
+        run: flutter create --platforms=android .
+
       - name: Build APK
         run: flutter build apk --release
 
@@ -51,6 +54,9 @@ jobs:
 
       - name: Flutter pub get
         run: flutter pub get
+
+      - name: Add Windows platform
+        run: flutter create --platforms=windows .
 
       - name: Build Windows
         run: flutter build windows --release
