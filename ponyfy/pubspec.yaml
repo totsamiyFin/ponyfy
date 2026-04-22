@@ -21,7 +21,6 @@ dependencies:
   go_router: ^13.2.0
 
   # UI
-  google_fonts: ^6.2.1
   flutter_animate: ^4.5.0
   lottie: ^3.1.0
   cached_network_image: ^3.3.1
@@ -53,13 +52,3 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/animations/
-
-  fonts:
-    - family: Nunito
-      fonts:
-        - asset: assets/fonts/Nunito-Regular.ttf
-        - asset: assets/fonts/Nunito-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Nunito-SemiBold.ttf
-          weight: 600
