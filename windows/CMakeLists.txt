@@ -1,0 +1,47 @@
+cmake_minimum_required(VERSION 3.14)
+project(ponyfy LANGUAGES CXX)
+
+set(BINARY_NAME "ponyfy")
+
+cmake_policy(SET CMP0063 NEW)
+
+set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/run" CACHE PATH "..." FORCE)
+
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/run" CACHE PATH "..." FORCE)
+endif()
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+include(flutter)
+include(utils)
+
+set(FLUTTER_MANAGED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/flutter")
+
+add_subdirectory(${FLUTTER_MANAGED_DIR})
+add_subdirectory("runner")
+
+set_target_properties(${BINARY_NAME} PROPERTIES
+  PDB_OUTPUT_DIRECTORY "$<TARGET_FILE_DIR:${BINARY_NAME}>"
+)
+
+install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
+  COMPONENT Runtime)
+
+install(FILES "${FLUTTER_ICU_DATA_FILE}" DESTINATION "${CMAKE_INSTALL_PREFIX}"
+  COMPONENT Runtime)
+
+install(FILES "${FLUTTER_LIBRARY}" DESTINATION "${CMAKE_INSTALL_PREFIX}"
+  COMPONENT Runtime)
+
+foreach(bundled_library ${PLUGIN_BUNDLED_LIBRARIES})
+  install(FILES "${bundled_library}"
+    DESTINATION "${CMAKE_INSTALL_PREFIX}"
+    COMPONENT Runtime)
+endforeach(bundled_library)
+
+install(DIRECTORY "${FLUTTER_ASSET_DIR_NAME}" DESTINATION "${CMAKE_INSTALL_PREFIX}"
+  COMPONENT Runtime)
+
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/runner/resources" DESTINATION "${CMAKE_INSTALL_PREFIX}"
+  COMPONENT Runtime)
