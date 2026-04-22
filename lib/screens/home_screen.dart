@@ -71,9 +71,18 @@ class HomeScreen extends ConsumerWidget {
                 // VPN Power Button
                 VpnPowerButton(
                   status: status,
-                  onTap: () => ref
-                      .read(vpnStatusProvider.notifier)
-                      .toggle(profile?.url),
+                  onTap: () {
+                    if (profile == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Сначала добавь профиль во вкладке Профили'),
+                          backgroundColor: MlpColors.disconnected,
+                        ),
+                      );
+                      return;
+                    }
+                    ref.read(vpnStatusProvider.notifier).toggle(profile.url);
+                  },
                 )
                     .animate()
                     .scale(begin: const Offset(0.8, 0.8), duration: 500.ms,

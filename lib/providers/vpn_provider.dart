@@ -9,6 +9,7 @@ class VpnStatusNotifier extends StateNotifier<VpnStatus> {
 
   FlutterV2ray? _v2ray;
   String? _activeConfig;
+  String? lastError;
 
   Future<void> toggle(String? configUrl) async {
     if (state == VpnStatus.connected) {
@@ -35,8 +36,15 @@ class VpnStatusNotifier extends StateNotifier<VpnStatus> {
 
       await _v2ray!.initializeV2Ray();
 
-      // Parse the subscription URL or vmess/vless link
-      final parser = FlutterV2ray.parseFromURL(configUrl);
+      V2RayURL? parser;
+      try {
+        parser = FlutterV2ray.parseFromURL(configUrl);
+      } catch (e) {
+        // если не прямая ссылка — пробуем как raw config
+        state = VpnStatus.disconnected;
+        return;
+      }
+
       _activeConfig = parser.getFullConfiguration();
 
       final permission = await _v2ray!.requestPermission();
@@ -53,6 +61,7 @@ class VpnStatusNotifier extends StateNotifier<VpnStatus> {
         proxyOnly: false,
       );
     } catch (e) {
+      lastError = e.toString();
       state = VpnStatus.disconnected;
     }
   }
